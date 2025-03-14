@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -73,7 +74,7 @@ func (s *Server) handleDeployApp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Start deployment in background
-	go s.performDeploy(r, app, deployment)
+	go s.performDeploy(app, deployment)
 
 	s.respond(w, r, deployment, http.StatusAccepted)
 }
@@ -261,7 +262,7 @@ func (s *Server) handleGitHubWebhook(w http.ResponseWriter, r *http.Request) {
 				}
 
 				// Start deployment in background
-				go s.performDeploy(r, app, deployment)
+				go s.performDeploy(app, deployment)
 			}
 		}
 
@@ -274,12 +275,13 @@ func (s *Server) handleGitHubWebhook(w http.ResponseWriter, r *http.Request) {
 
 // Helper methods
 
-func (s *Server) performDeploy(r *http.Request, app *db.App, deployment *db.Deployment) {
+func (s *Server) performDeploy(app *db.App, deployment *db.Deployment) {
+	ctx := context.Background()
 	s.logger.Printf("Starting deployment %s for app %s", deployment.ID, app.ID)
 
 	// Update deployment status
 	deployment.Status = "in_progress"
-	s.db.UpdateDeployment(r.Context(), deployment)
+	s.db.UpdateDeployment(ctx, deployment)
 
 	// TODO: Implement actual deployment logic
 	// For MVP, we'll just simulate a successful deployment
@@ -288,13 +290,13 @@ func (s *Server) performDeploy(r *http.Request, app *db.App, deployment *db.Depl
 	// Update deployment status
 	deployment.Status = "success"
 	deployment.EndedAt = time.Now()
-	s.db.UpdateDeployment(r.Context(), deployment)
+	s.db.UpdateDeployment(ctx, deployment)
 
 	// Update app status
 	app.Status = "running"
 	app.LastDeploy = time.Now()
 	app.UpdatedAt = time.Now()
-	s.db.UpdateApp(r.Context(), app)
+	s.db.UpdateApp(ctx, app)
 
 	// Publish event
 	s.eventBus.Publish(events.Event{

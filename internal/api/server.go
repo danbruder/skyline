@@ -252,36 +252,6 @@ func (s *Server) handleDeleteApp(w http.ResponseWriter, r *http.Request) {
 	s.respond(w, r, nil, http.StatusNoContent)
 }
 
-// func (s *Server) handleDeployApp(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement deployment logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
-
-// func (s *Server) handleStartApp(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement app start logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
-
-// func (s *Server) handleStopApp(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement app stop logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
-
-// func (s *Server) handleRestartApp(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement app restart logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
-
-// func (s *Server) handleGetAppStatus(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement app status logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
-
-// func (s *Server) handleGetAppLogs(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement app logs logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
-
 func (s *Server) handleListDeployments(w http.ResponseWriter, r *http.Request) {
 	appID := chi.URLParam(r, "appID")
 
@@ -305,8 +275,3 @@ func (s *Server) handleListBackups(w http.ResponseWriter, r *http.Request) {
 
 	s.respond(w, r, backups, http.StatusOK)
 }
-
-// func (s *Server) handleGitHubWebhook(w http.ResponseWriter, r *http.Request) {
-//   // TODO: Implement GitHub webhook logic
-//   s.respond(w, r, map[string]string{"status": "not implemented"}, http.StatusNotImplemented)
-// }
