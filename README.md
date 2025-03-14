@@ -35,8 +35,8 @@ The platform comprises several core components:
 
 1. Download the latest release:
    ```bash
-   curl -L -o deploy-platform https://github.com/your-username/deploy-platform/releases/latest/download/deploy-platform
-   chmod +x deploy-platform
+   curl -L -o skyline https://github.com/danbruder/skyline/releases/latest/download/skyline
+   chmod +x skyline
    ```
 
 2. Create a configuration file:
@@ -47,7 +47,7 @@ The platform comprises several core components:
 
 3. Start the platform:
    ```bash
-   ./deploy-platform -config config.yaml
+   ./skyline -config config.yaml
    ```
 
 ### Configuration
@@ -60,7 +60,7 @@ server:
   port: 8080
 
 database:
-  path: "data/system/deploy-platform.db"
+  path: "data/system/skyline.db"
 
 # Additional configuration sections...
 ```
@@ -100,9 +100,9 @@ See API documentation for all available endpoints.
 ### Building from Source
 
 ```bash
-git clone https://github.com/your-username/deploy-platform.git
-cd deploy-platform
-go build -o deploy-platform ./cmd/server
+git clone https://github.com/danbruder/skyline.git
+cd skyline
+go build -o skyline ./cmd/server
 ```
 
 ### Running Tests
