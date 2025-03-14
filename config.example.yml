@@ -1,0 +1,45 @@
+# Deploy Platform Configuration
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 60s
+
+database:
+  path: "data/system/skyline.db"
+
+api:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 60s
+  ui_dir: "ui/dist"
+
+proxy:
+  caddy_path: "caddy"
+  config_path: "data/system/caddy.json"
+  template_file: ""
+  admin_api_port: 2019
+  admin_api_addr: "localhost"
+  reload_timeout: 10s
+
+supervisor:
+  apps_dir: "data/apps"
+  max_restarts: 5
+  restart_delay: 5s
+
+backup:
+  litestream_path: "litestream"
+  litestream_config: "data/system/litestream.yml"
+  backup_destination: "backups"
+  s3_bucket: "deploy-platform-backups"
+  s3_region: "us-east-1"
+  s3_endpoint: ""
+  s3_access_key_id: ""
+  s3_access_key: ""
+  sync_interval: "10s"
+  retention_policy: "24h"
+
+github:
+  webhook_secret: ""
