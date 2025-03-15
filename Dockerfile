@@ -22,10 +22,10 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates tzdata
 
 # Copy binary from builder stage
-COPY --from=builder /app/skyline /app/skyline
+COPY --from=builder /app/skyline /usr/local/bin/skyline
 
 # Create necessary directories
-RUN mkdir -p /app/data /app/config /app/deployed
+RUN mkdir -p /app/data /app/deployed
 
 # Set environment variables
 ENV SKYLINE_DATA_DIR=/app/data
@@ -46,5 +46,4 @@ RUN chown -R skyline:skyline /app
 USER skyline
 
 # Set the entrypoint
-ENTRYPOINT ["/app/skyline"]
-CMD ["serve"]
+CMD ["/usr/local/bin/skyline"]
