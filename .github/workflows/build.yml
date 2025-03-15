@@ -1,0 +1,78 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [amd64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          mkdir -p bin
+          # Create asset name with version, OS, and architecture
+          ASSET_NAME=skyline-${{ github.ref_name }}-${{ matrix.goos }}-${{ matrix.goarch }}
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            ASSET_NAME="${ASSET_NAME}.exe"
+          fi
+          
+          # Build the application
+          go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o bin/${ASSET_NAME} ./cmd/skyline
+          
+          # Create a tarball or zip file
+          cd bin
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            zip ${ASSET_NAME}.zip ${ASSET_NAME}
+            echo "ARTIFACT=${ASSET_NAME}.zip" >> $GITHUB_ENV
+          else
+            tar -czvf ${ASSET_NAME}.tar.gz ${ASSET_NAME}
+            echo "ARTIFACT=${ASSET_NAME}.tar.gz" >> $GITHUB_ENV
+          fi
+          cd ..
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: skyline-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: bin/${{ env.ARTIFACT }}
+          if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: List artifacts
+        run: find artifacts -type f | sort
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
