@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Set the base URL
-BASE_URL="http://localhost:8080/api/v1"
+#BASE_URL="http://localhost:8080/api/v1"
+BASE_URL="http://167.172.236.15:8080/api/v1"
 APP_ID=""
 
 echo "Testing API endpoints..."
